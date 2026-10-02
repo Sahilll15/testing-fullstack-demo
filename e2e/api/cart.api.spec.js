@@ -16,7 +16,7 @@ const test = base.extend({
 test("GET /api/products returns the catalogue", async ({ request }) => {
   const res = await request.get("/api/products");
   expect(res.status()).toBe(200);
-  expect(await res.json()).toHaveLength(3);
+  expect(await res.json()).toHaveLength(6);
 });
 
 test("a full shopping flow over HTTP", async ({ request }) => {

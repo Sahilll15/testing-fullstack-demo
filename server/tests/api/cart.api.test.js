@@ -19,7 +19,7 @@ describe("cart API", () => {
   it("lists products", async () => {
     const res = await request(app).get("/api/products");
     expect(res.status).toBe(200);
-    expect(res.body.map((p) => p.id)).toEqual(["coffee", "bagel", "notebook"]);
+    expect(res.body.map((p) => p.id)).toEqual(["coffee", "bagel", "notebook", "mug", "tote", "plant"]);
   });
 
   it("adds items and returns updated totals", async () => {

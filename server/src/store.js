@@ -1,9 +1,12 @@
 // In-memory data. A fresh store per test keeps tests independent of each other.
 
 export const PRODUCTS = [
-  { id: "coffee", name: "Coffee", price: 450 },
-  { id: "bagel", name: "Bagel", price: 300 },
-  { id: "notebook", name: "Notebook", price: 1200 },
+  { id: "coffee", name: "Coffee", price: 450, category: "Pantry", description: "Single-origin beans, medium roast, 250 g." },
+  { id: "bagel", name: "Bagel", price: 300, category: "Bakery", description: "Hand-rolled sesame bagel, baked this morning." },
+  { id: "notebook", name: "Notebook", price: 1200, category: "Stationery", description: "A5 dotted pages, lay-flat binding." },
+  { id: "mug", name: "Mug", price: 1600, category: "Kitchen", description: "Stoneware mug that keeps coffee hot longer." },
+  { id: "tote", name: "Tote", price: 2200, category: "Accessories", description: "Heavy canvas tote with an inside pocket." },
+  { id: "plant", name: "Plant", price: 1800, category: "Home", description: "Low-light desk plant in a ceramic pot." },
 ];
 
 export function createStore() {

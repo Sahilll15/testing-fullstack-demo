@@ -2,6 +2,8 @@
 
 A small shopping cart built with React and Express. It exists to show the different kinds of tests in one full-stack app.
 
+![Tiny Shop](docs/cart.png)
+
 ## Run it
 
 ```bash

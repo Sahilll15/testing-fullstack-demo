@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("shows the products", async ({ page }) => {
-  await expect(page.getByRole("button", { name: /^Add / })).toHaveCount(3);
+  await expect(page.getByRole("button", { name: /^Add / })).toHaveCount(6);
 });
 
 test("adding items updates the total", async ({ page }) => {
