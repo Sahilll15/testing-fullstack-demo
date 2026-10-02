@@ -1,0 +1,38 @@
+{
+  "name": "testing-fullstack-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "React + Express shopping cart with unit, API and browser automation tests",
+  "scripts": {
+    "dev": "concurrently -n api,web \"node --watch server/src/server.js\" \"vite\"",
+    "build": "vite build",
+    "start": "node server/src/server.js",
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:unit": "vitest run",
+    "test:server": "vitest run --project server",
+    "test:client": "vitest run --project client",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:api": "playwright test --project api",
+    "test:e2e:ui": "playwright test --project ui"
+  },
+  "dependencies": {
+    "express": "^4.22.3",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "concurrently": "^10.0.5",
+    "jsdom": "^29.1.1",
+    "msw": "^2.15.0",
+    "supertest": "^7.3.1",
+    "vite": "^8.3.2",
+    "vitest": "^5.0.3"
+  }
+}

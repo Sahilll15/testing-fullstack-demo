@@ -1,0 +1,22 @@
+import { describe, expect, it, vi } from "vitest";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { DiscountForm } from "../src/components/DiscountForm.jsx";
+
+describe("DiscountForm", () => {
+  it("keeps Apply disabled until a code is typed", async () => {
+    render(<DiscountForm onApply={() => {}} />);
+    const apply = screen.getByRole("button", { name: "Apply" });
+    expect(apply).toBeDisabled();
+
+    await userEvent.type(screen.getByLabelText("Discount code"), "SAVE10");
+    expect(apply).toBeEnabled();
+  });
+
+  it("sends the typed code", async () => {
+    const onApply = vi.fn();
+    render(<DiscountForm onApply={onApply} />);
+    await userEvent.type(screen.getByLabelText("Discount code"), "SAVE10{Enter}");
+    expect(onApply).toHaveBeenCalledWith("SAVE10");
+  });
+});
