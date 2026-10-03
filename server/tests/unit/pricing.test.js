@@ -14,8 +14,21 @@ describe("calculateSubtotal", () => {
     expect(calculateSubtotal([])).toBe(0);
   });
 
+  it("handles many items", () => {
+    const items = [{ price: 2500, qty: 4 }, { price: 4000, qty: 3 }, { price: 29900, qty: 1 }];
+    expect(calculateSubtotal(items)).toBe(10000 + 12000 + 29900);
+  });
+
+  it("allows a free item", () => {
+    expect(calculateSubtotal([{ price: 0, qty: 3 }])).toBe(0);
+  });
+
   it.each([0, -1, 1.5])("rejects quantity %s", (qty) => {
     expect(() => calculateSubtotal([{ price: 100, qty }])).toThrow("Invalid quantity");
+  });
+
+  it("rejects a price in rupees with decimals instead of paise", () => {
+    expect(() => calculateSubtotal([{ price: 40.5, qty: 1 }])).toThrow("Invalid price");
   });
 
   it("rejects a negative price", () => {
@@ -47,9 +60,46 @@ describe("calculateGst", () => {
   it("charges 18% and rounds to the nearest paisa", () => {
     expect(calculateGst(1005)).toBe(181);
   });
+
+  it("is zero on a zero amount", () => {
+    expect(calculateGst(0)).toBe(0);
+  });
+
+  it("accepts a different rate", () => {
+    expect(calculateGst(10000, 0.05)).toBe(500);
+  });
+
+  it.each([
+    [2, 0],
+    [3, 1],
+    [997, 179],
+  ])("rounds %s paise of GST base to %s", (amount, expected) => {
+    expect(calculateGst(amount)).toBe(expected);
+  });
 });
 
 describe("calculateTotal", () => {
+  it("is all zeros for an empty cart", () => {
+    expect(calculateTotal([])).toEqual({ subtotal: 0, discount: 0, gst: 0, total: 0 });
+  });
+
+  it("adds GST when there is no discount", () => {
+    expect(calculateTotal([chai])).toEqual({ subtotal: 8000, discount: 0, gst: 1440, total: 9440 });
+  });
+
+  it("applies FLAT50 on a big order", () => {
+    expect(calculateTotal([{ price: 12000, qty: 5 }], "FLAT50")).toEqual({
+      subtotal: 60000,
+      discount: 5000,
+      gst: 9900,
+      total: 64900,
+    });
+  });
+
+  it("throws for an unknown code instead of silently ignoring it", () => {
+    expect(() => calculateTotal([chai], "FREE")).toThrow("Unknown discount code");
+  });
+
   it("applies the discount before GST", () => {
     expect(calculateTotal([chai, notebook], "FEST10")).toEqual({
       subtotal: 20000,
@@ -61,6 +111,14 @@ describe("calculateTotal", () => {
 });
 
 describe("formatMoney", () => {
+  it("shows zero as ₹0.00", () => {
+    expect(formatMoney(0)).toBe("₹0.00");
+  });
+
+  it("keeps two decimal places", () => {
+    expect(formatMoney(4000)).toBe("₹40.00");
+  });
+
   it("shows paise as rupees", () => {
     expect(formatMoney(21240)).toBe("₹212.40");
   });

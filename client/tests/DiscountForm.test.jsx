@@ -19,4 +19,15 @@ describe("DiscountForm", () => {
     await userEvent.type(screen.getByLabelText("Discount code"), "FEST10{Enter}");
     expect(onApply).toHaveBeenCalledWith("FEST10");
   });
+
+  it("does not allow a code made only of spaces", async () => {
+    render(<DiscountForm onApply={() => {}} />);
+    await userEvent.type(screen.getByLabelText("Discount code"), "   ");
+    expect(screen.getByRole("button", { name: "Apply" })).toBeDisabled();
+  });
+
+  it("shows the applied code when there is one", () => {
+    render(<DiscountForm onApply={() => {}} applied="FEST10" />);
+    expect(screen.getByText("Code FEST10 applied")).toBeInTheDocument();
+  });
 });

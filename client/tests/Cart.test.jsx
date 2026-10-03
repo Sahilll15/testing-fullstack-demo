@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Cart } from "../src/components/Cart.jsx";
 
@@ -29,5 +29,23 @@ describe("Cart", () => {
     render(<Cart cart={cart} onRemove={onRemove} />);
     await userEvent.click(screen.getByRole("button", { name: "Remove Chai" }));
     expect(onRemove).toHaveBeenCalledWith("chai");
+  });
+
+  it("shows each line total and the price of one item", () => {
+    render(<Cart cart={cart} onRemove={() => {}} />);
+    const line = within(screen.getByRole("list", { name: "Cart items" }));
+    expect(line.getByText("₹80.00")).toBeInTheDocument();
+    expect(line.getByText("₹40.00 each")).toBeInTheDocument();
+  });
+
+  it("shows GST and subtotal", () => {
+    render(<Cart cart={cart} onRemove={() => {}} />);
+    expect(screen.getByTestId("subtotal")).toHaveTextContent("₹80.00");
+    expect(screen.getByTestId("gst")).toHaveTextContent("₹12.96");
+  });
+
+  it("shows ₹0.00 discount when there is none", () => {
+    render(<Cart cart={{ ...cart, discount: 0 }} onRemove={() => {}} />);
+    expect(screen.getByTestId("discount")).toHaveTextContent("₹0.00");
   });
 });
