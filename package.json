@@ -8,10 +8,11 @@
     "dev": "concurrently -n api,web \"node --watch server/src/server.js\" \"vite\"",
     "build": "vite build",
     "start": "node server/src/server.js",
-    "test": "npm run test:unit && npm run test:e2e",
-    "test:unit": "vitest run",
+    "test": "npm run test:unit && npm run test:contract && npm run test:e2e",
+    "test:unit": "vitest run --project server --project client",
     "test:server": "vitest run --project server",
     "test:client": "vitest run --project client",
+    "test:contract": "vitest run --project contract-consumer && vitest run --project contract-provider",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:api": "playwright test --project api",
@@ -24,6 +25,7 @@
     "react-dom": "^19.3.0"
   },
   "devDependencies": {
+    "@pact-foundation/pact": "^17.1.4",
     "@playwright/test": "^1.63.0",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",

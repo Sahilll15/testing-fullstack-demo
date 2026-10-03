@@ -20,6 +20,21 @@ export default defineConfig({
           setupFiles: ["client/tests/setup.js"],
         },
       },
+      {
+        test: {
+          name: "contract-consumer",
+          environment: "jsdom",
+          include: ["contract/consumer.pact.test.js"],
+          fileParallelism: false,
+        },
+      },
+      {
+        test: {
+          name: "contract-provider",
+          environment: "node",
+          include: ["contract/provider.pact.test.js"],
+        },
+      },
     ],
   },
 });

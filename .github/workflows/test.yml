@@ -10,6 +10,7 @@ jobs:
         with: { node-version-file: .nvmrc, cache: npm }
       - run: npm ci
       - run: npm run test:unit
+      - run: npm run test:contract
 
   e2e:
     needs: unit

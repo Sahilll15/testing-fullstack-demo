@@ -8,8 +8,8 @@ function cartId() {
   return id;
 }
 
-async function request(method, path, body) {
-  const res = await fetch(new URL(path, window.location.origin), {
+async function request(baseUrl, method, path, body) {
+  const res = await fetch(new URL(path, baseUrl), {
     method,
     headers: { "Content-Type": "application/json", "X-Cart-Id": cartId() },
     body: body ? JSON.stringify(body) : undefined,
@@ -19,11 +19,16 @@ async function request(method, path, body) {
   return data;
 }
 
-export const api = {
-  getProducts: () => request("GET", "/api/products"),
-  getCart: () => request("GET", "/api/cart"),
-  addItem: (productId) => request("POST", "/api/cart/items", { productId, qty: 1 }),
-  removeItem: (productId) => request("DELETE", `/api/cart/items/${productId}`),
-  applyDiscount: (code) => request("POST", "/api/cart/discount", { code }),
-  checkout: () => request("POST", "/api/checkout"),
-};
+// The base URL is a parameter so contract tests can point the client at Pact's mock server.
+export function createApi(baseUrl = window.location.origin) {
+  return {
+    getProducts: () => request(baseUrl, "GET", "/api/products"),
+    getCart: () => request(baseUrl, "GET", "/api/cart"),
+    addItem: (productId) => request(baseUrl, "POST", "/api/cart/items", { productId, qty: 1 }),
+    removeItem: (productId) => request(baseUrl, "DELETE", `/api/cart/items/${productId}`),
+    applyDiscount: (code) => request(baseUrl, "POST", "/api/cart/discount", { code }),
+    checkout: () => request(baseUrl, "POST", "/api/checkout"),
+  };
+}
+
+export const api = createApi();
