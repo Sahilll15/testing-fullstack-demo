@@ -9,8 +9,8 @@ export const PRODUCTS = [
   { id: "earphones", name: "Earphones", price: 79900, category: "Gadgets", description: "Wired earphones with mic for online classes." },
 ];
 
-export function createStore() {
-  const products = PRODUCTS.map((p) => ({ ...p }));
+export function createStore({ products: initial = PRODUCTS } = {}) {
+  const products = initial.map((p) => ({ ...p }));
   const carts = new Map();
   let nextOrder = 1;
 

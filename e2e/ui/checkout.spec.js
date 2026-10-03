@@ -26,6 +26,8 @@ test("shows the seeded products with their prices", async ({ page }) => {
   const card = page.getByRole("listitem").filter({ hasText: products.labCoat.name });
   await expect(card).toContainText("₹450.00");
   await expect(addButton(page, products.vadaPav)).toBeVisible();
+  // Only seeded data exists during the run: the built-in Chai is not on the page.
+  await expect(page.getByRole("button", { name: "Add Chai" })).toHaveCount(0);
 });
 
 test("adding items updates the total", async ({ page }) => {

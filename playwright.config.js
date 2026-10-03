@@ -20,7 +20,7 @@ export default defineConfig({
   ],
   webServer: {
     command: "npm run build && npm start",
-    env: { PORT: String(PORT), ADMIN_KEY },
+    env: { PORT: String(PORT), ADMIN_KEY, EMPTY_CATALOGUE: "1" },
     url: `http://localhost:${PORT}/api/products`,
     reuseExistingServer: !process.env.CI,
   },

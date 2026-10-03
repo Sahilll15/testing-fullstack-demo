@@ -24,6 +24,13 @@ test.beforeEach(async ({ playwright, baseURL }, testInfo) => {
   await seedProducts(admin, products);
 });
 
+
+//before test -> runs before the tests and is used to add the seeded data to the application
+//test assertion where in the real test assertion comes into the picture
+//after test-> runs after the tests and is used to cleanup the test data we have created
+
+
+
 // AFTER each test: delete what we created, even if the test failed.
 test.afterEach(async () => {
   await deleteProducts(admin, products);
@@ -33,7 +40,10 @@ test.afterEach(async () => {
 test("the seeded products show up in the catalogue", async ({ request }) => {
   const res = await request.get("/api/products");
   expect(res.status()).toBe(200);
-  expect(await res.json()).toContainEqual(products.vadaPav);
+  const catalogue = await res.json();
+  expect(catalogue).toContainEqual(products.vadaPav);
+  // The server starts empty, so none of the shop's built-in products are here.
+  expect(catalogue.map((p) => p.id)).not.toContain("chai");
 });
 
 test("a full shopping flow over HTTP", async ({ request }) => {
