@@ -9,14 +9,14 @@ describe("DiscountForm", () => {
     const apply = screen.getByRole("button", { name: "Apply" });
     expect(apply).toBeDisabled();
 
-    await userEvent.type(screen.getByLabelText("Discount code"), "SAVE10");
+    await userEvent.type(screen.getByLabelText("Discount code"), "FEST10");
     expect(apply).toBeEnabled();
   });
 
   it("sends the typed code", async () => {
     const onApply = vi.fn();
     render(<DiscountForm onApply={onApply} />);
-    await userEvent.type(screen.getByLabelText("Discount code"), "SAVE10{Enter}");
-    expect(onApply).toHaveBeenCalledWith("SAVE10");
+    await userEvent.type(screen.getByLabelText("Discount code"), "FEST10{Enter}");
+    expect(onApply).toHaveBeenCalledWith("FEST10");
   });
 });

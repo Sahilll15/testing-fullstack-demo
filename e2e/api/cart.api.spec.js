@@ -20,14 +20,14 @@ test("GET /api/products returns the catalogue", async ({ request }) => {
 });
 
 test("a full shopping flow over HTTP", async ({ request }) => {
-  await request.post("/api/cart/items", { data: { productId: "notebook", qty: 2 } });
+  await request.post("/api/cart/items", { data: { productId: "notebook", qty: 5 } });
 
-  const discounted = await request.post("/api/cart/discount", { data: { code: "FLAT5" } });
-  expect(await discounted.json()).toMatchObject({ subtotal: 2400, discount: 500, tax: 190, total: 2090 });
+  const discounted = await request.post("/api/cart/discount", { data: { code: "FLAT50" } });
+  expect(await discounted.json()).toMatchObject({ subtotal: 60000, discount: 5000, gst: 9900, total: 64900 });
 
   const order = await request.post("/api/checkout");
   expect(order.status()).toBe(201);
-  expect(await order.json()).toMatchObject({ orderId: expect.stringMatching(/^ORD-\d{4}$/), total: 2090 });
+  expect(await order.json()).toMatchObject({ orderId: expect.stringMatching(/^ORD-\d{4}$/), total: 64900 });
 
   const cart = await request.get("/api/cart");
   expect((await cart.json()).items).toHaveLength(0);
@@ -37,7 +37,7 @@ test("bad input gets a clear 4xx error", async ({ request }) => {
   const unknown = await request.post("/api/cart/items", { data: { productId: "laptop" } });
   expect(unknown.status()).toBe(404);
 
-  const badQty = await request.post("/api/cart/items", { data: { productId: "coffee", qty: 0 } });
+  const badQty = await request.post("/api/cart/items", { data: { productId: "chai", qty: 0 } });
   expect(badQty.status()).toBe(400);
 
   const empty = await request.post("/api/checkout");

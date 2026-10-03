@@ -16,7 +16,7 @@ export function DiscountForm({ onApply, applied }) {
       <div className="discount-row">
         <span className="input-icon">
           <Tag size={16} aria-hidden="true" />
-          <input id="code" value={code} onChange={(e) => setCode(e.target.value)} placeholder="e.g. SAVE10" autoComplete="off" />
+          <input id="code" value={code} onChange={(e) => setCode(e.target.value)} placeholder="e.g. FEST10" autoComplete="off" />
         </span>
         <button className="btn btn-secondary" type="submit" disabled={!code.trim()}>
           Apply

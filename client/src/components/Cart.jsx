@@ -44,8 +44,8 @@ export function Cart({ cart, onRemove }) {
         <dd data-testid="discount" className={cart.discount ? "saving" : undefined}>
           {formatMoney(-cart.discount)}
         </dd>
-        <dt>Tax (10%)</dt>
-        <dd data-testid="tax">{formatMoney(cart.tax)}</dd>
+        <dt>GST (18%)</dt>
+        <dd data-testid="gst">{formatMoney(cart.gst)}</dd>
         <dt className="grand">Total</dt>
         <dd className="grand" data-testid="total">
           {formatMoney(cart.total)}

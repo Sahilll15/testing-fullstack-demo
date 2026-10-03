@@ -9,21 +9,21 @@ import App from "../src/App.jsx";
 describe("App", () => {
   it("loads products from the API", async () => {
     render(<App />);
-    expect(await screen.findByRole("button", { name: "Add Coffee" })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "Add Chai" })).toBeInTheDocument();
     expect(screen.getByText("Your cart is empty.")).toBeInTheDocument();
   });
 
   it("shows the new total after adding an item", async () => {
     render(<App />);
     await userEvent.click(await screen.findByRole("button", { name: "Add Notebook" }));
-    expect(await screen.findByTestId("total")).toHaveTextContent("$13.20");
+    expect(await screen.findByTestId("total")).toHaveTextContent("₹141.60");
   });
 
   it("sends the cart id header on every request", async () => {
     const seen = [];
     server.events.on("request:start", ({ request }) => seen.push(request.headers.get("X-Cart-Id")));
     render(<App />);
-    await screen.findByRole("button", { name: "Add Coffee" });
+    await screen.findByRole("button", { name: "Add Chai" });
     expect(seen.length).toBeGreaterThan(0);
     expect(new Set(seen).size).toBe(1);
     server.events.removeAllListeners();

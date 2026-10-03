@@ -1,10 +1,10 @@
-// Pure pricing rules. All money is in cents so totals never pick up float errors.
+// Pure pricing rules. All money is in paise so totals never pick up float errors.
 
-export const TAX_RATE = 0.1;
+export const GST_RATE = 0.18;
 
 const DISCOUNTS = {
-  SAVE10: { type: "percent", value: 10 },
-  FLAT5: { type: "fixed", value: 500, minSubtotal: 2000 },
+  FEST10: { type: "percent", value: 10 },
+  FLAT50: { type: "fixed", value: 5000, minSubtotal: 50000 },
 };
 
 export function calculateSubtotal(items) {
@@ -28,17 +28,18 @@ export function calculateDiscount(subtotal, code) {
   return Math.min(amount, subtotal);
 }
 
-export function calculateTax(amount, rate = TAX_RATE) {
+export function calculateGst(amount, rate = GST_RATE) {
   return Math.round(amount * rate);
 }
 
 export function calculateTotal(items, code) {
   const subtotal = calculateSubtotal(items);
   const discount = calculateDiscount(subtotal, code);
-  const tax = calculateTax(subtotal - discount);
-  return { subtotal, discount, tax, total: subtotal - discount + tax };
+  const gst = calculateGst(subtotal - discount);
+  return { subtotal, discount, gst, total: subtotal - discount + gst };
 }
 
-export function formatMoney(cents) {
-  return `$${(cents / 100).toFixed(2)}`;
+export function formatMoney(paise) {
+  const rupees = (paise / 100).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return `₹${rupees}`;
 }

@@ -1,4 +1,4 @@
-import { Search, ShoppingCart, Store } from "lucide-react";
+import { GraduationCap, Search, ShoppingCart } from "lucide-react";
 
 export function Header({ query, onQuery, count }) {
   return (
@@ -6,9 +6,9 @@ export function Header({ query, onQuery, count }) {
       <div className="container topbar-inner">
         <a className="brand" href="/">
           <span className="brand-mark">
-            <Store size={18} aria-hidden="true" />
+            <GraduationCap size={18} aria-hidden="true" />
           </span>
-          Tiny Shop
+          Campus Cart
         </a>
         <label className="search">
           <Search size={16} aria-hidden="true" />

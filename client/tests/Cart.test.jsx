@@ -4,11 +4,11 @@ import userEvent from "@testing-library/user-event";
 import { Cart } from "../src/components/Cart.jsx";
 
 const cart = {
-  items: [{ productId: "coffee", name: "Coffee", price: 450, qty: 2 }],
-  subtotal: 900,
-  discount: 90,
-  tax: 81,
-  total: 891,
+  items: [{ productId: "chai", name: "Chai", price: 4000, qty: 2 }],
+  subtotal: 8000,
+  discount: 800,
+  gst: 1296,
+  total: 8496,
 };
 
 describe("Cart", () => {
@@ -19,15 +19,15 @@ describe("Cart", () => {
 
   it("shows each item and the totals", () => {
     render(<Cart cart={cart} onRemove={() => {}} />);
-    expect(screen.getByRole("list", { name: "Cart items" })).toHaveTextContent("Coffee × 2");
-    expect(screen.getByTestId("discount")).toHaveTextContent("-$0.90");
-    expect(screen.getByTestId("total")).toHaveTextContent("$8.91");
+    expect(screen.getByRole("list", { name: "Cart items" })).toHaveTextContent("Chai × 2");
+    expect(screen.getByTestId("discount")).toHaveTextContent("-₹8.00");
+    expect(screen.getByTestId("total")).toHaveTextContent("₹84.96");
   });
 
   it("asks to remove the item the user clicked", async () => {
     const onRemove = vi.fn();
     render(<Cart cart={cart} onRemove={onRemove} />);
-    await userEvent.click(screen.getByRole("button", { name: "Remove Coffee" }));
-    expect(onRemove).toHaveBeenCalledWith("coffee");
+    await userEvent.click(screen.getByRole("button", { name: "Remove Chai" }));
+    expect(onRemove).toHaveBeenCalledWith("chai");
   });
 });

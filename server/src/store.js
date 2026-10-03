@@ -1,12 +1,12 @@
 // In-memory data. A fresh store per test keeps tests independent of each other.
 
 export const PRODUCTS = [
-  { id: "coffee", name: "Coffee", price: 450, category: "Pantry", description: "Single-origin beans, medium roast, 250 g." },
-  { id: "bagel", name: "Bagel", price: 300, category: "Bakery", description: "Hand-rolled sesame bagel, baked this morning." },
-  { id: "notebook", name: "Notebook", price: 1200, category: "Stationery", description: "A5 dotted pages, lay-flat binding." },
-  { id: "mug", name: "Mug", price: 1600, category: "Kitchen", description: "Stoneware mug that keeps coffee hot longer." },
-  { id: "tote", name: "Tote", price: 2200, category: "Accessories", description: "Heavy canvas tote with an inside pocket." },
-  { id: "plant", name: "Plant", price: 1800, category: "Home", description: "Low-light desk plant in a ceramic pot." },
+  { id: "chai", name: "Chai", price: 4000, category: "Beverages", description: "Kadak masala chai with ginger and elaichi, 250 ml." },
+  { id: "samosa", name: "Samosa", price: 2500, category: "Snacks", description: "Crispy aloo samosa with green chutney." },
+  { id: "notebook", name: "Notebook", price: 12000, category: "Stationery", description: "200-page ruled notebook for lab records." },
+  { id: "bottle", name: "Bottle", price: 35000, category: "Hostel", description: "Steel bottle that keeps water cold for 12 hours." },
+  { id: "tote", name: "Tote", price: 29900, category: "Accessories", description: "Canvas tote that fits a laptop and books." },
+  { id: "earphones", name: "Earphones", price: 79900, category: "Gadgets", description: "Wired earphones with mic for online classes." },
 ];
 
 export function createStore() {

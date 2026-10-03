@@ -19,38 +19,38 @@ describe("cart API", () => {
   it("lists products", async () => {
     const res = await request(app).get("/api/products");
     expect(res.status).toBe(200);
-    expect(res.body.map((p) => p.id)).toEqual(["coffee", "bagel", "notebook", "mug", "tote", "plant"]);
+    expect(res.body.map((p) => p.id)).toEqual(["chai", "samosa", "notebook", "bottle", "tote", "earphones"]);
   });
 
   it("adds items and returns updated totals", async () => {
     const user = asUser("alice");
-    await user.post("/api/cart/items", { productId: "coffee", qty: 2 });
+    await user.post("/api/cart/items", { productId: "chai", qty: 2 });
     const res = await user.post("/api/cart/items", { productId: "notebook" });
 
     expect(res.status).toBe(201);
-    expect(res.body).toMatchObject({ subtotal: 2100, tax: 210, total: 2310 });
+    expect(res.body).toMatchObject({ subtotal: 20000, gst: 3600, total: 23600 });
   });
 
   it("merges repeat adds of the same product into one line", async () => {
     const user = asUser("alice");
-    await user.post("/api/cart/items", { productId: "bagel" });
-    const res = await user.post("/api/cart/items", { productId: "bagel" });
-    expect(res.body.items).toEqual([expect.objectContaining({ productId: "bagel", qty: 2 })]);
+    await user.post("/api/cart/items", { productId: "samosa" });
+    const res = await user.post("/api/cart/items", { productId: "samosa" });
+    expect(res.body.items).toEqual([expect.objectContaining({ productId: "samosa", qty: 2 })]);
   });
 
   it("removes an item", async () => {
     const user = asUser("alice");
-    await user.post("/api/cart/items", { productId: "bagel" });
-    const res = await user.delete("/api/cart/items/bagel");
+    await user.post("/api/cart/items", { productId: "samosa" });
+    const res = await user.delete("/api/cart/items/samosa");
     expect(res.body.items).toHaveLength(0);
   });
 
   it("applies a valid discount code", async () => {
     const user = asUser("alice");
-    await user.post("/api/cart/items", { productId: "notebook", qty: 2 });
-    const res = await user.post("/api/cart/discount", { code: "flat5" });
+    await user.post("/api/cart/items", { productId: "notebook", qty: 5 });
+    const res = await user.post("/api/cart/discount", { code: "flat50" });
     expect(res.status).toBe(200);
-    expect(res.body).toMatchObject({ code: "FLAT5", discount: 500 });
+    expect(res.body).toMatchObject({ code: "FLAT50", discount: 5000 });
   });
 
   it("rejects an unknown discount code", async () => {
@@ -77,17 +77,17 @@ describe("cart API", () => {
 
   it("checks out and empties the cart", async () => {
     const user = asUser("alice");
-    await user.post("/api/cart/items", { productId: "coffee" });
+    await user.post("/api/cart/items", { productId: "chai" });
     const order = await user.post("/api/checkout");
     expect(order.status).toBe(201);
-    expect(order.body).toEqual({ orderId: "ORD-0001", total: 495 });
+    expect(order.body).toEqual({ orderId: "ORD-0001", total: 4720 });
 
     const cart = await user.get("/api/cart");
     expect(cart.body.items).toHaveLength(0);
   });
 
   it("keeps two users' carts separate", async () => {
-    await asUser("alice").post("/api/cart/items", { productId: "coffee" });
+    await asUser("alice").post("/api/cart/items", { productId: "chai" });
     const bob = await asUser("bob").get("/api/cart");
     expect(bob.body.items).toHaveLength(0);
   });

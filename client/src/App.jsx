@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { CircleCheck, RotateCcw, ShieldCheck, TriangleAlert, Truck } from "lucide-react";
+import { CircleCheck, RotateCcw, Smartphone, TriangleAlert, Truck } from "lucide-react";
 import { api } from "./api.js";
 import { formatMoney } from "./money.js";
 import { Header } from "./components/Header.jsx";
@@ -7,12 +7,12 @@ import { ProductList } from "./components/ProductList.jsx";
 import { Cart } from "./components/Cart.jsx";
 import { DiscountForm } from "./components/DiscountForm.jsx";
 
-const EMPTY_CART = { items: [], code: null, subtotal: 0, discount: 0, tax: 0, total: 0 };
+const EMPTY_CART = { items: [], code: null, subtotal: 0, discount: 0, gst: 0, total: 0 };
 
 const PERKS = [
-  { Icon: Truck, title: "Free delivery", text: "On orders over $20" },
-  { Icon: RotateCcw, title: "30-day returns", text: "No questions asked" },
-  { Icon: ShieldCheck, title: "Secure checkout", text: "Your details stay safe" },
+  { Icon: Truck, title: "Free delivery", text: "To your hostel on orders above ₹499" },
+  { Icon: Smartphone, title: "Pay with UPI", text: "GPay, PhonePe, Paytm or card" },
+  { Icon: RotateCcw, title: "Easy returns", text: "7-day return window" },
 ];
 
 export default function App() {
@@ -70,15 +70,15 @@ export default function App() {
       <main className="container">
         <section className="hero">
           <div>
-            <p className="eyebrow">New season picks</p>
-            <h1>Everyday things, made well.</h1>
-            <p className="hero-text">Small-batch coffee, fresh bakes and desk goods, delivered to your door.</p>
+            <p className="eyebrow">Fest season sale</p>
+            <h1>Everything you need on campus.</h1>
+            <p className="hero-text">Chai, snacks, stationery and gadgets, delivered to your hostel gate.</p>
           </div>
           <div className="promo">
             <span className="promo-label">Limited offer</span>
-            <strong>10% off everything</strong>
+            <strong>10% off for students</strong>
             <span>
-              Use code <code>SAVE10</code> at checkout
+              Use code <code>FEST10</code> at checkout
             </span>
           </div>
         </section>
@@ -132,7 +132,7 @@ export default function App() {
       </main>
 
       <footer className="footer">
-        <div className="container">Tiny Shop is a demo app for practising unit, API and browser tests.</div>
+        <div className="container">Campus Cart is a demo app for practising unit, API and browser tests.</div>
       </footer>
     </>
   );

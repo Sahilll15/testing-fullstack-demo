@@ -1,12 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { calculateDiscount, calculateSubtotal, calculateTax, calculateTotal, formatMoney } from "../../src/pricing.js";
+import { calculateDiscount, calculateGst, calculateSubtotal, calculateTotal, formatMoney } from "../../src/pricing.js";
 
-const coffee = { price: 450, qty: 2 };
-const notebook = { price: 1200, qty: 1 };
+// Prices are in paise: ₹40 is 4000.
+const chai = { price: 4000, qty: 2 };
+const notebook = { price: 12000, qty: 1 };
 
 describe("calculateSubtotal", () => {
   it("adds price times quantity for every item", () => {
-    expect(calculateSubtotal([coffee, notebook])).toBe(2100);
+    expect(calculateSubtotal([chai, notebook])).toBe(20000);
   });
 
   it("returns 0 for an empty cart", () => {
@@ -24,43 +25,47 @@ describe("calculateSubtotal", () => {
 
 describe("calculateDiscount", () => {
   it.each([
-    ["SAVE10 takes 10% off", 2000, "SAVE10", 200],
-    ["codes ignore case and spaces", 2000, " save10 ", 200],
-    ["FLAT5 takes $5 off orders of $20 or more", 2000, "FLAT5", 500],
-    ["FLAT5 does nothing below $20", 1999, "FLAT5", 0],
-    ["no code means no discount", 2000, undefined, 0],
+    ["FEST10 takes 10% off", 20000, "FEST10", 2000],
+    ["codes ignore case and spaces", 20000, " fest10 ", 2000],
+    ["FLAT50 takes ₹50 off orders of ₹500 or more", 50000, "FLAT50", 5000],
+    ["FLAT50 does nothing below ₹500", 49999, "FLAT50", 0],
+    ["no code means no discount", 20000, undefined, 0],
   ])("%s", (_name, subtotal, code, expected) => {
     expect(calculateDiscount(subtotal, code)).toBe(expected);
   });
 
   it("never discounts more than the subtotal", () => {
-    expect(calculateDiscount(100, "SAVE10")).toBeLessThanOrEqual(100);
+    expect(calculateDiscount(100, "FEST10")).toBeLessThanOrEqual(100);
   });
 
   it("rejects an unknown code", () => {
-    expect(() => calculateDiscount(2000, "FREE")).toThrow("Unknown discount code");
+    expect(() => calculateDiscount(20000, "FREE")).toThrow("Unknown discount code");
   });
 });
 
-describe("calculateTax", () => {
-  it("charges 10% and rounds to the nearest cent", () => {
-    expect(calculateTax(1005)).toBe(101);
+describe("calculateGst", () => {
+  it("charges 18% and rounds to the nearest paisa", () => {
+    expect(calculateGst(1005)).toBe(181);
   });
 });
 
 describe("calculateTotal", () => {
-  it("applies the discount before tax", () => {
-    expect(calculateTotal([coffee, notebook], "SAVE10")).toEqual({
-      subtotal: 2100,
-      discount: 210,
-      tax: 189,
-      total: 2079,
+  it("applies the discount before GST", () => {
+    expect(calculateTotal([chai, notebook], "FEST10")).toEqual({
+      subtotal: 20000,
+      discount: 2000,
+      gst: 3240,
+      total: 21240,
     });
   });
 });
 
 describe("formatMoney", () => {
-  it("shows cents as dollars", () => {
-    expect(formatMoney(2079)).toBe("$20.79");
+  it("shows paise as rupees", () => {
+    expect(formatMoney(21240)).toBe("₹212.40");
+  });
+
+  it("uses Indian digit grouping", () => {
+    expect(formatMoney(12345678)).toBe("₹1,23,456.78");
   });
 });

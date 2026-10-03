@@ -10,21 +10,21 @@ test("shows the products", async ({ page }) => {
 });
 
 test("adding items updates the total", async ({ page }) => {
-  await page.getByRole("button", { name: "Add Coffee" }).click();
+  await page.getByRole("button", { name: "Add Chai" }).click();
   await page.getByRole("button", { name: "Add Notebook" }).click();
 
-  await expect(page.getByRole("list", { name: "Cart items" })).toContainText("Coffee × 1");
-  await expect(page.getByTestId("subtotal")).toHaveText("$16.50");
-  await expect(page.getByTestId("total")).toHaveText("$18.15");
+  await expect(page.getByRole("list", { name: "Cart items" })).toContainText("Chai × 1");
+  await expect(page.getByTestId("subtotal")).toHaveText("₹160.00");
+  await expect(page.getByTestId("total")).toHaveText("₹188.80");
 });
 
 test("a discount code lowers the total", async ({ page }) => {
   await page.getByRole("button", { name: "Add Notebook" }).click();
-  await page.getByLabel("Discount code").fill("save10");
+  await page.getByLabel("Discount code").fill("fest10");
   await page.getByRole("button", { name: "Apply" }).click();
 
-  await expect(page.getByTestId("discount")).toHaveText("-$1.20");
-  await expect(page.getByTestId("total")).toHaveText("$11.88");
+  await expect(page.getByTestId("discount")).toHaveText("-₹12.00");
+  await expect(page.getByTestId("total")).toHaveText("₹127.44");
 });
 
 test("an unknown discount code shows an error", async ({ page }) => {
@@ -35,10 +35,10 @@ test("an unknown discount code shows an error", async ({ page }) => {
 });
 
 test("checkout places an order and empties the cart", async ({ page }) => {
-  await page.getByRole("button", { name: "Add Bagel" }).click();
+  await page.getByRole("button", { name: "Add Samosa" }).click();
   await page.getByRole("button", { name: "Checkout" }).click();
 
-  await expect(page.getByRole("status")).toContainText(/Order placed: ORD-\d{4} \(\$3\.30\)/);
+  await expect(page.getByRole("status")).toContainText(/Order placed: ORD-\d{4} \(₹29\.50\)/);
   await expect(page.getByText("Your cart is empty.")).toBeVisible();
 });
 
@@ -55,12 +55,12 @@ test("two shoppers at the same time do not see each other's carts", async ({ bro
   await alice.goto("/");
   await bob.goto("/");
 
-  await alice.getByRole("button", { name: "Add Coffee" }).click();
-  await expect(alice.getByTestId("total")).toHaveText("$4.95");
+  await alice.getByRole("button", { name: "Add Chai" }).click();
+  await expect(alice.getByTestId("total")).toHaveText("₹47.20");
 
   await bob.reload();
   await expect(bob.getByText("Your cart is empty.")).toBeVisible();
-  await expect(alice.getByRole("list", { name: "Cart items" })).toContainText("Coffee × 1");
+  await expect(alice.getByRole("list", { name: "Cart items" })).toContainText("Chai × 1");
 
   await aliceContext.close();
   await bobContext.close();

@@ -1,8 +1,8 @@
-# Tiny Shop: a testing demo
+# Campus Cart: a testing demo
 
-A small shopping cart built with React and Express. It exists to show the different kinds of tests in one full-stack app.
+A small campus shopping cart built with React and Express, with prices in rupees and 18% GST. It exists to show the different kinds of tests in one full-stack app.
 
-![Tiny Shop](docs/cart.png)
+![Campus Cart](docs/cart.png)
 
 ## Run it
 
@@ -17,7 +17,7 @@ npm run dev        # React on http://localhost:5173, API on http://localhost:300
 
 | Layer | What it checks | Tool | Command |
 |---|---|---|---|
-| Server unit tests | Pricing rules: subtotal, discount codes, tax | Vitest | `npm run test:server` |
+| Server unit tests | Pricing rules: subtotal, discount codes (FEST10, FLAT50), GST | Vitest | `npm run test:server` |
 | Server API tests | The real Express app and pricing working together | Vitest + Supertest | `npm run test:server` |
 | React unit tests | Components and the whole app, with the network faked | Vitest + Testing Library + MSW | `npm run test:client` |
 | API automation | The running server over real HTTP | Playwright | `npm run test:e2e:api` |
@@ -38,7 +38,7 @@ e2e/ui            Playwright browser tests
 
 ## Things worth showing in a talk
 
-- **See a test fail.** Change `TAX_RATE` in `server/src/pricing.js` from `0.1` to `0.2` and run `npm test`. Server tests and browser tests go red. The React tests stay green, because MSW fakes the server. That is why you need tests at more than one layer.
+- **See a test fail.** Change `GST_RATE` in `server/src/pricing.js` from `0.18` to `0.28` and run `npm test`. Server tests and browser tests go red. The React tests stay green, because MSW fakes the server. That is why you need tests at more than one layer.
 - **Two users at once.** `e2e/ui/checkout.spec.js` opens two browsers as two shoppers and checks their carts stay separate.
 - **No shared state.** Every API and browser test gets its own cart, so tests can run in parallel in any order.
 - **Evidence on failure.** Playwright keeps a trace, a screenshot and a video for failed tests. Open them with `npx playwright show-report`.
