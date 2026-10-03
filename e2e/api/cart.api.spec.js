@@ -1,4 +1,5 @@
 import { expect, test as base } from "@playwright/test";
+import { adminClient, deleteProducts, seedProducts, testProducts } from "../support/seed.js";
 
 // API automation against the real running server. Each test gets its own cart id,
 // so tests can run in parallel without touching each other's carts.
@@ -13,21 +14,38 @@ const test = base.extend({
   },
 });
 
-test("GET /api/products returns the catalogue", async ({ request }) => {
+let admin;
+let products;
+
+// BEFORE each test: create fresh products that only this test uses.
+test.beforeEach(async ({ playwright, baseURL }, testInfo) => {
+  admin = await adminClient(playwright, baseURL);
+  products = testProducts(testInfo);
+  await seedProducts(admin, products);
+});
+
+// AFTER each test: delete what we created, even if the test failed.
+test.afterEach(async () => {
+  await deleteProducts(admin, products);
+  await admin.dispose();
+});
+
+test("the seeded products show up in the catalogue", async ({ request }) => {
   const res = await request.get("/api/products");
   expect(res.status()).toBe(200);
-  expect(await res.json()).toHaveLength(6);
+  expect(await res.json()).toContainEqual(products.vadaPav);
 });
 
 test("a full shopping flow over HTTP", async ({ request }) => {
-  await request.post("/api/cart/items", { data: { productId: "notebook", qty: 5 } });
+  // 2 lab coats at ₹450 = ₹900, so FLAT50 (₹50 off orders of ₹500+) applies.
+  await request.post("/api/cart/items", { data: { productId: products.labCoat.id, qty: 2 } });
 
   const discounted = await request.post("/api/cart/discount", { data: { code: "FLAT50" } });
-  expect(await discounted.json()).toMatchObject({ subtotal: 60000, discount: 5000, gst: 9900, total: 64900 });
+  expect(await discounted.json()).toMatchObject({ subtotal: 90000, discount: 5000, gst: 15300, total: 100300 });
 
   const order = await request.post("/api/checkout");
   expect(order.status()).toBe(201);
-  expect(await order.json()).toMatchObject({ orderId: expect.stringMatching(/^ORD-\d{4}$/), total: 64900 });
+  expect(await order.json()).toMatchObject({ orderId: expect.stringMatching(/^ORD-\d{4}$/), total: 100300 });
 
   const cart = await request.get("/api/cart");
   expect((await cart.json()).items).toHaveLength(0);
@@ -37,7 +55,7 @@ test("bad input gets a clear 4xx error", async ({ request }) => {
   const unknown = await request.post("/api/cart/items", { data: { productId: "laptop" } });
   expect(unknown.status()).toBe(404);
 
-  const badQty = await request.post("/api/cart/items", { data: { productId: "chai", qty: 0 } });
+  const badQty = await request.post("/api/cart/items", { data: { productId: products.vadaPav.id, qty: 0 } });
   expect(badQty.status()).toBe(400);
 
   const empty = await request.post("/api/checkout");
@@ -49,4 +67,9 @@ test("requests without a cart id are rejected", async ({ playwright, baseURL }) 
   const res = await bare.get("/api/cart");
   expect(res.status()).toBe(400);
   await bare.dispose();
+});
+
+test("only callers with the admin key can seed data", async ({ request }) => {
+  const res = await request.post("/api/admin/products", { data: { id: "hack", name: "Hack", price: 1 } });
+  expect(res.status()).toBe(403);
 });

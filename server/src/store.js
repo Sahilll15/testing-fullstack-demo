@@ -10,6 +10,7 @@ export const PRODUCTS = [
 ];
 
 export function createStore() {
+  const products = PRODUCTS.map((p) => ({ ...p }));
   const carts = new Map();
   let nextOrder = 1;
 
@@ -19,6 +20,20 @@ export function createStore() {
   }
 
   return {
+    listProducts: () => products,
+    findProduct: (id) => products.find((p) => p.id === id),
+    addProduct(product) {
+      products.push(product);
+      return product;
+    },
+    deleteProduct(id) {
+      const index = products.findIndex((p) => p.id === id);
+      if (index === -1) return false;
+      products.splice(index, 1);
+      // A deleted product must not stay behind in anyone's cart.
+      for (const cart of carts.values()) cart.items = cart.items.filter((i) => i.productId !== id);
+      return true;
+    },
     getCart,
     addItem(cartId, productId, qty) {
       const cart = getCart(cartId);

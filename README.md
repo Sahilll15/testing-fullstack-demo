@@ -42,6 +42,7 @@ e2e/ui            Playwright browser tests
 
 - **See a test fail.** Change `GST_RATE` in `server/src/pricing.js` from `0.18` to `0.28` and run `npm test`. Server tests and browser tests go red. The React tests stay green, because MSW fakes the server. That is why you need tests at more than one layer.
 - **Only the contract catches it.** In `server/src/app.js`, rename the cart item field `name` to `title`. All unit and React tests stay green, but `npm run test:contract` fails with `$.items[0] -> Actual map is missing the following keys: name`.
+- **Seeded test data.** The Playwright API and UI tests create their own products in `beforeEach` through a key-protected admin API (`e2e/support/seed.js`) and delete them in `afterEach`, so every test starts and ends clean.
 - **Two users at once.** `e2e/ui/checkout.spec.js` opens two browsers as two shoppers and checks their carts stay separate.
 - **No shared state.** Every API and browser test gets its own cart, so tests can run in parallel in any order.
 - **Evidence on failure.** Playwright keeps a trace, a screenshot and a video for failed tests. Open them with `npx playwright show-report`.
