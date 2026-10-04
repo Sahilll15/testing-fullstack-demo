@@ -26,6 +26,8 @@ npm run dev        # React on http://localhost:5173, API on http://localhost:300
 
 Run everything with `npm test`. Playwright builds the React app and starts the server for you.
 
+`npm install` also turns on a git pre-push hook (`.githooks/pre-push`) that runs the unit tests and cancels the push if any fail. Skip it with `git push --no-verify`.
+
 ## Where things live
 
 ```

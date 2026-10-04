@@ -1,0 +1,15 @@
+#!/bin/sh
+# Runs the unit tests before every git push. If any test fails, the push is cancelled.
+# Skip it in an emergency with: git push --no-verify
+
+# Git apps outside the terminal may not load nvm, so find node ourselves.
+if ! command -v npm >/dev/null 2>&1 && [ -s "$HOME/.nvm/nvm.sh" ]; then
+  . "$HOME/.nvm/nvm.sh" >/dev/null
+  nvm use >/dev/null
+fi
+
+echo "pre-push: running unit tests..."
+if ! npm run --silent test:unit; then
+  echo "pre-push: unit tests failed, push cancelled. Fix them or use --no-verify."
+  exit 1
+fi
