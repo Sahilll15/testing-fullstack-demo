@@ -5,7 +5,7 @@ import { artFor } from "../productArt.js";
 export function Cart({ cart, onRemove }) {
   if (cart.items.length === 0) {
     return (
-      <div className="empty">
+      <div className="empty empty-class">
         <PackageOpen size={36} strokeWidth={1.5} aria-hidden="true" />
         <p>Your cart is empty.</p>
         <span className="muted">Add something from the shop to get started.</span>

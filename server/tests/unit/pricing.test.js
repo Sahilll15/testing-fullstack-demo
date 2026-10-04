@@ -2,12 +2,13 @@ import { describe, expect, it } from "vitest";
 import { calculateDiscount, calculateGst, calculateSubtotal, calculateTotal, formatMoney } from "../../src/pricing.js";
 
 // Prices are in paise: ₹40 is 4000.
-const chai = { price: 4000, qty: 2 };
+const chai = { price: 40, qty: 2 };
 const notebook = { price: 12000, qty: 1 };
+
 
 describe("calculateSubtotal", () => {
   it("adds price times quantity for every item", () => {
-    expect(calculateSubtotal([chai, notebook])).toBe(20000);
+    expect(calculateSubtotal([chai, notebook])).toBe(12080);
   });
 
   it("returns 0 for an empty cart", () => {
@@ -84,7 +85,7 @@ describe("calculateTotal", () => {
   });
 
   it("adds GST when there is no discount", () => {
-    expect(calculateTotal([chai])).toEqual({ subtotal: 8000, discount: 0, gst: 1440, total: 9440 });
+    expect(calculateTotal([chai])).toEqual({ subtotal: 80, discount: 0, gst: 14, total: 94 });
   });
 
   it("applies FLAT50 on a big order", () => {
@@ -102,10 +103,10 @@ describe("calculateTotal", () => {
 
   it("applies the discount before GST", () => {
     expect(calculateTotal([chai, notebook], "FEST10")).toEqual({
-      subtotal: 20000,
-      discount: 2000,
-      gst: 3240,
-      total: 21240,
+      subtotal: 12080,
+      discount: 1208,
+      gst: 1957,
+      total: 12829,
     });
   });
 });
